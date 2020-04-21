@@ -1,23 +1,101 @@
 #include <Servo.h>
 #include <FastLED.h>
 #include <sbus.h>
-#include "value.h"
 
 // #define debug 1
 
+#define beacon_on 600
+#define beacon_break 400
+#define strobe_on 200
+#define strobe_break 150
+
+#define servo6_center 1500
+#define servo7_center 1500
+
 #define NUM_LEDS 28
 CRGB leds[NUM_LEDS];
+
+#define PIN_Strobe 4
+#define PIN_Tail 5
+#define PIN_LandingL 6
+#define PIN_Beacon 7
+#define WS28_PIN 3
+#define PIN_SERVO6 11
+#define PIN_SERVO7 10
+#define SBUS_PIN 12
+
+
 SBUS sbus;
+
+#define SBUSchannel_6 6   //Gear
+#define SBUSchannel_7 7   //Pan
+#define SBUSchannel_8 8   //Light
 
 Servo servo6;
 Servo servo7;
+
+uint16_t channel_6;
+uint16_t channel_7;
+uint16_t channel_8;
+
+uint16_t channel_6_result = 0;
+uint16_t channel_7_result = 0;
+uint16_t channel_8_result = 0;
+
+int channel_6_count = 0;
+int channel_7_count = 0;
+int channel_8_count = 0;
+
+int i = 0;
+unsigned long RC_CMD = 0;
+char ST = 0;
+char cycle_cnt = 0;
+
+bool IN = false;
+bool Sig = false;
+
+int LED_RT_Beacon = 0;
+int LED_GN_Beacon = 0;
+int LED_BL_Beacon = 0;
+int LED_RT_Strobe = 0;
+int LED_GN_Strobe = 0;
+int LED_BL_Strobe = 0;
+int LED_RT_NavR = 0;
+int LED_GN_NavR = 0;
+int LED_BL_NavR = 0;
+int LED_RT_NavL = 0;
+int LED_GN_NavL = 0;
+int LED_BL_NavL = 0;
+int LED_RT_NavRLand = 0;
+int LED_GN_NavRLand = 0;
+int LED_BL_NavRLand = 0;
+int LED_RT_NavLLand = 0;
+int LED_GN_NavLLand = 0;
+int LED_BL_NavLLand = 0;
+
+unsigned long currenttime;
+unsigned long cycletime;
+unsigned long an;
+unsigned long aus;
+
+bool NAVlights;
+bool Beacon;
+bool Strobe;
+bool LandingL;
+bool cycle;
+bool tail;
+bool static_light;
+
+bool tailLED;
+bool BeaconLED;
+bool StrobeLED;
 
 void setup() {
 
   servo6.attach(PIN_SERVO6);
   servo7.attach(PIN_SERVO7);
 
-  delay( 500 );
+  delay( 1000 );
   sbus.begin(SBUS_PIN, sbusBlocking);
   FastLED.addLeds<WS2811, WS28_PIN, RGB>(leds, NUM_LEDS);                 // WS28 Init
 
@@ -36,11 +114,6 @@ void setup() {
   }
   FastLED.show();
   delay(300);
-
-  for (int j; j <= max_lowpass; j++) {
-    CH6[j] = 1500;
-    CH7[j] = 1500;
-  }
 }
 
 void loop() {
@@ -49,22 +122,7 @@ void loop() {
   } else {
     SBUSread_filter_Channels();       //I READ THE SBUS CHANNELS 16 TIMES AND FILTER THE SIGNAL BECOUSE SOMETIMES I GOT AN IVALID VALUE
   }
-
-  CH6[i_f] = channel_6_result ;
-  CH7[i_f] = channel_7_result ;
-  i_f++;
-  if (i_f > max_lowpass) i_f = 1;
-
-  for (int j; j <= max_lowpass; j++) {
-    lowpass_filter6 = lowpass_filter6 + CH6[j];
-    lowpass_filter7 = lowpass_filter7 + CH7[j];
-  }
-
-  channel_6_result = lowpass_filter6 / max_lowpass;
-  channel_7_result = lowpass_filter7 / max_lowpass;
-  lowpass_filter6 = 0;
-  lowpass_filter7 = 0;
-
+  
 #ifdef debug
   Serial.print(channel_6_result);
   Serial.print(" ");
