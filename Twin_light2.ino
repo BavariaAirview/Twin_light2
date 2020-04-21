@@ -18,7 +18,7 @@ void setup() {
   servo7.attach(PIN_SERVO7);
 
   delay( 500 );
-  sbus.begin(SBUS_PIN, sbusBlocking);
+  sbus.begin(SBUS_PIN, sbusNonBlocking);
   FastLED.addLeds<WS2811, WS28_PIN, RGB>(leds, NUM_LEDS);                 // WS28 Init
 
 #ifdef debug
@@ -50,6 +50,9 @@ void loop() {
     SBUSread_filter_Channels();       //I READ THE SBUS CHANNELS 16 TIMES AND FILTER THE SIGNAL BECOUSE SOMETIMES I GOT AN IVALID VALUE
   }
 
+  if (channel_6_result < 900 || channel_6_result > 2100 ) channel_6_result = servo6_center;
+  if (channel_7_result < 900 || channel_6_result > 2100 ) channel_7_result = servo7_center;
+
   CH6[i_f] = channel_6_result ;
   CH7[i_f] = channel_7_result ;
   i_f++;
@@ -73,9 +76,6 @@ void loop() {
   Serial.print(channel_8_result);
   Serial.print(" ");
 #endif
-
-  if (channel_6_result < 900) channel_6_result = servo6_center;
-  if (channel_7_result < 900) channel_7_result = servo7_center;
 
   RC_CMD = channel_8_result;
 
