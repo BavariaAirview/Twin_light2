@@ -18,6 +18,13 @@ void light_switch() {
     ST = 0;
   }
 
+  if (distanceToHome > 50) {
+    LandingL = true;
+  } else {
+    LandingL = false;
+  }
+
+  
   switch (ST) {
     case 1: {                             // not armed / GPS not ready
         NAVlights = false;
@@ -131,11 +138,9 @@ void light_output() {
   if (cycle_cnt == 3) {
     if ( tail == true) {
       tailLED = true;
-      LandingL = true;
     }
   } else {
     tailLED = false;
-    LandingL = false;
   }
 
   if (BeaconLED == true) {

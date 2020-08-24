@@ -27,6 +27,9 @@ void debug_print(){
 
     Serial.print("System Status   : ");
     Serial.println(system_status);
+
+    Serial.print("dist to home    : ");
+    Serial.println(distanceToHome);
     
     Serial.println(" ");
   }

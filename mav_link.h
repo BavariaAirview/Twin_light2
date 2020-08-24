@@ -24,12 +24,27 @@ void mavl_receive()
           }
           break;
 
-        case MAVLINK_MSG_ID_GPS_RAW_INT:  // MAVLINK_MSG_ID_GPS_RAW_INT
+case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:  // MAVLINK_MSG_ID_GLOBAL_POSITION_INT
+          {
+            mavlink_global_position_int_t global_position_int;
+            mavlink_msg_global_position_int_decode(&msg, &global_position_int);
+
+            relative_alt = global_position_int.relative_alt;
+            gps_lat = global_position_int.lat;
+            gps_lon = global_position_int.lon;
+            gps_alt = global_position_int.alt;
+
+          }
+          break;
+
+          case MAVLINK_MSG_ID_GPS_RAW_INT:  // MAVLINK_MSG_ID_GPS_RAW_INT
           {
             mavlink_gps_raw_int_t gps_raw_int;
             mavlink_msg_gps_raw_int_decode(&msg, &gps_raw_int);
 
             fix_type = gps_raw_int.fix_type;
+            numSat = gps_raw_int.satellites_visible;
+
           }
           break;
 

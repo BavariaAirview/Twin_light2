@@ -16,6 +16,8 @@
 #define max_lowpass 20
 
 //_______________________________________________________________________________
+uint8_t int_cycle =0;
+
 uint8_t vbat = 0;
 uint8_t fix_type = 0;           // < 0-1: no fix, 2: 2D fix, 3: 3D fix
 
@@ -32,6 +34,18 @@ unsigned long debugtime = 0;
 bool debugsend = false;
 
 #endif
+
+uint8_t set_home = 1;
+uint8_t numSat = 0;
+int32_t gps_lon = 0;
+int32_t gps_lat = 0;
+int32_t gps_alt = 0;
+int32_t gps_home_lon = 0;
+int32_t gps_home_lat = 0;
+int32_t gps_home_alt = 0;
+uint32_t distanceToHome = 0;    // distance to home in meters
+int32_t relative_alt = 0;  
+int16_t directionToHome = 0;   // direction to home in degrees
 
 int i = 0;
 unsigned long RC_CMD = 0;
