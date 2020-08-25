@@ -6,9 +6,11 @@ void light_switch() {
 
     if (arm) {
       ST = 3;
+      arm_alt = true;
     } else {
       ST = 2;
     }
+
     if (failsafe) ST = 4;
   }
   else if (fix_type == 1 || fix_type == 2) {
@@ -18,7 +20,7 @@ void light_switch() {
     ST = 0;
   }
 
-  if (distanceToHome > 50) {
+  if (distanceToHome < 50 && arm) {
     LandingL = true;
   } else {
     LandingL = false;
@@ -29,9 +31,9 @@ void light_switch() {
     case 1: {                             // not armed / GPS not ready
         NAVlights = false;
         Beacon = false;
-        Strobe = true;
+        Strobe = false;
         tail = false;
-        cycle = true;
+        cycle = false;
         static_light = true;
         break;
       }

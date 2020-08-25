@@ -25,6 +25,7 @@ uint8_t base_mode = MAV_MODE_PREFLIGHT;
 uint8_t system_status = MAV_STATE_UNINIT;
 
 bool arm = false;
+bool arm_alt = false;
 bool failsafe = false;
 
 #ifdef debug

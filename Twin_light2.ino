@@ -4,8 +4,7 @@
 #include "value.h"
 
 CRGB leds[NUM_LEDS];
-SoftwareSerial mavlinkSerial(11, 12); // RX, TX
-
+SoftwareSerial mavlinkSerial(12, 11); // RX, TX
 #include "mav_link.h"
 #include "output.h"
 #include "debuging.h"
@@ -31,7 +30,7 @@ void setup() {
   }
   FastLED.show();
   delay(300);
-
+  Serial.print("Init done");
 }
 
 
@@ -41,20 +40,21 @@ void loop() {
   mavl_receive();
   set_flight_mode_flags();
 
-#ifdef debug
-  debug_print();
-#endif
-
   light_switch();
   light_cycle();
   light_output();
 
-  if (int_cycle > 100 && set_home == 0) {
-    GPS_calculateDistanceAndDirectionToHome();
-    int_cycle = 0;
+  if (int_cycle > 200) {
+    if (set_home == 0) {
+      GPS_calculateDistanceAndDirectionToHome();
+     }
+     int_cycle = 0;
+#ifdef debug
+    debug_print();
+#endif
   }
   //set GPS home when 3D fix
-  if (fix_type > 2 && set_home == 1 && gps_lat != 0 && gps_lon != 0 && numSat > 7) {
+  if (fix_type > 2 && set_home == 1 && gps_lat != 0 && gps_lon != 0 && numSat > 5) {
     gps_home_lat = gps_lat;
     gps_home_lon = gps_lon;
     gps_home_alt = gps_alt;

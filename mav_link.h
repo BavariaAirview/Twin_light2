@@ -24,7 +24,7 @@ void mavl_receive()
           }
           break;
 
-case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:  // MAVLINK_MSG_ID_GLOBAL_POSITION_INT
+        case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:  // MAVLINK_MSG_ID_GLOBAL_POSITION_INT
           {
             mavlink_global_position_int_t global_position_int;
             mavlink_msg_global_position_int_decode(&msg, &global_position_int);
@@ -37,7 +37,7 @@ case MAVLINK_MSG_ID_GLOBAL_POSITION_INT:  // MAVLINK_MSG_ID_GLOBAL_POSITION_INT
           }
           break;
 
-          case MAVLINK_MSG_ID_GPS_RAW_INT:  // MAVLINK_MSG_ID_GPS_RAW_INT
+        case MAVLINK_MSG_ID_GPS_RAW_INT:  // MAVLINK_MSG_ID_GPS_RAW_INT
           {
             mavlink_gps_raw_int_t gps_raw_int;
             mavlink_msg_gps_raw_int_decode(&msg, &gps_raw_int);
@@ -80,6 +80,10 @@ void set_flight_mode_flags()
     failsafe = true;
   }
   else {
-    failsafe = false;
+    if (arm == false && arm_alt == true) {
+      failsafe = true;
+    } else {
+      failsafe = false;
+    }
   }
 }
