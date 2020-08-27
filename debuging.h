@@ -22,6 +22,9 @@ void debug_print() {
   Serial.print("System Status   : ");
   Serial.println(system_status);
 
+  Serial.print("Battery         : ");
+  Serial.println(vbat);
+
   Serial.print("dist to home    : ");
   Serial.println(distanceToHome);
 

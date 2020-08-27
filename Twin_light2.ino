@@ -12,7 +12,7 @@ SoftwareSerial mavlinkSerial(12, 11); // RX, TX
 //______________________________________________________________________________________
 void setup() {
 
-  mavlinkSerial.begin(57600);
+  mavlinkSerial.begin(38400);
   FastLED.addLeds<WS2811, WS28_PIN, RGB>(leds, NUM_LEDS);                 // WS28 Init
 
 #ifdef debug
